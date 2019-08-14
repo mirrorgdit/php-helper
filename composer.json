@@ -1,0 +1,22 @@
+{
+    "name": "mirrorgdit/php-helper",
+    "description": "PHP各种辅助类、Memcached、Redis、Mysql、Mysqli、PDO",
+    "keywords": ["php", "Memcached", "Redis", "Mysql","Mysqli","PDO","mirrorgdit"],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "mirrorgdit",
+            "email": "mirrorgdit@163.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=5.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "mirrorgdit\\helper\\": "./src"
+        }
+    }
+}
