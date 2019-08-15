@@ -6,6 +6,7 @@
  * @license  https://github.com/mirrorgdit/php-helper/blob/master/README.md
  */
 namespace mirrorgdit\helper;
+use mirrorgdit\helper\UserException;
 /**
  * Class MySQLHelper
  * @package mirrorgdit\helper

@@ -8,6 +8,8 @@
  * @license  https://github.com/mirrorgdit/php-helper/blob/master/README.md
  */
 namespace mirrorgdit\helper;
+use mirrorgdit\helper\UserException;
+
 /**
  * Class CMEMHelper
  * @package mirrorgdit\helper
@@ -238,7 +240,7 @@ class CMEMHelper {
             case \Memcached::RES_SERVER_ERROR:
             case \Memcached::RES_WRITE_FAILURE:
                 //case Memcached::RES_DATA_EXISTS:
-                //case Memcached::RES_NOTSTORED:
+                //case Memcached::RES_NOTSTORED:UserException
                 //case Memcached::RES_NOTFOUND:
             case \Memcached::RES_PARTIAL_READ:
                 //case Memcached::RES_SOME_ERRORS:

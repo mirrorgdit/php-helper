@@ -5,12 +5,15 @@
  * @author mirrorgdit@163.com
  * @license  https://github.com/mirrorgdit/php-helper/blob/master/README.md
  */
+
 namespace mirrorgdit\helper;
+use mirrorgdit\helper\UserException;
 /**
  * Class MySQLiHelper
  * @package mirrorgdit\helper
  */
-class MySQLiHelper {
+class MySQLiHelper
+{
     /**
      * 配置数组
      * @var array
@@ -30,7 +33,8 @@ class MySQLiHelper {
      * 构造函数
      * @param array $configArr 配置数组array($host, $port, $username, $password, $dbname, $charset)
      */
-    public function __construct($configArr) {
+    public function __construct($configArr)
+    {
         $this->_configArr = array(
             'host' => $configArr[0], // 主机
             'port' => $configArr[1], // 端口
@@ -44,7 +48,8 @@ class MySQLiHelper {
     /**
      * 建立到数据库服务器的连接
      */
-    public function connect() {
+    public function connect()
+    {
         // 连接数据库
         $this->_linkId = mysqli_connect($this->_configArr['host'], $this->_configArr['username'], $this->_configArr['password'], $this->_configArr['dbname'], $this->_configArr['port']) or $this->error('mysqli_connect');
 
@@ -59,7 +64,8 @@ class MySQLiHelper {
      * @param string $databaseName
      * @return true
      */
-    public function selectDB($databaseName) {
+    public function selectDB($databaseName)
+    {
         return $this->query('USE ' . $databaseName);
     }
 
@@ -68,14 +74,15 @@ class MySQLiHelper {
      * @param string $sql SQL语句
      * @return resource/true
      */
-    public function query($sql) {
+    public function query($sql)
+    {
         // 检查连接是否建立
         if (!isset($this->_linkId)) {
             $this->connect();
         }
 
         // 检查是否需要添加到事务队列当中
-        if (!$this->_transStarted ) {
+        if (!$this->_transStarted) {
             $this->start();
             //App::joinInTrans($this);
         }
@@ -92,7 +99,8 @@ class MySQLiHelper {
      * @param int $resultType 结果类型(MYSQL_ASSOC/MYSQL_NUM/MYSQL_BOTH)
      * @return array/false 返回根据从结果集取得的行生成的数组，如果没有更多行则返回 FALSE。
      */
-    public function fetchArray($result, $resultType = MYSQL_BOTH) {
+    public function fetchArray($result, $resultType = MYSQL_BOTH)
+    {
         return mysqli_fetch_array($result, $resultType);
     }
 
@@ -101,7 +109,8 @@ class MySQLiHelper {
      * @param resource $result 结果集
      * @return array/false 返回根据从结果集取得的行生成的关联数组，如果没有更多行则返回 FALSE。
      */
-    public function fetchAssoc($result) {
+    public function fetchAssoc($result)
+    {
         return mysqli_fetch_assoc($result);
     }
 
@@ -110,7 +119,8 @@ class MySQLiHelper {
      * @param resource $result 结果集
      * @return array/false 返回根据所取得的行生成的数组，如果没有更多行则返回 FALSE。
      */
-    public function fetchRow($result) {
+    public function fetchRow($result)
+    {
         return mysqli_fetch_row($result);
     }
 
@@ -119,7 +129,8 @@ class MySQLiHelper {
      * @param string $sql SQL语句
      * @return string
      */
-    public function count($sql) {
+    public function count($sql)
+    {
         $row = $this->fetchRow($this->query($sql));
         return $row[0];
     }
@@ -130,7 +141,8 @@ class MySQLiHelper {
      * @param int $resultType 结果类型(MYSQL_ASSOC/MYSQL_NUM/MYSQL_BOTH)
      * @return array/false
      */
-    public function getOne($sql, $resultType = MYSQL_ASSOC) {
+    public function getOne($sql, $resultType = MYSQL_ASSOC)
+    {
         return $this->fetchArray($this->query($sql), $resultType);
     }
 
@@ -140,7 +152,8 @@ class MySQLiHelper {
      * @param int $resultType 结果类型(MYSQL_ASSOC/MYSQL_NUM/MYSQL_BOTH)
      * @return array
      */
-    public function getAll($sql, $resultType = 1) {
+    public function getAll($sql, $resultType = 1)
+    {
         $result = $this->query($sql);
         $rowArr = array();
         while ($row = $this->fetchArray($result, $resultType)) {
@@ -153,14 +166,16 @@ class MySQLiHelper {
      * 返回给定的连接中上一步INSERT查询中产生的AUTO_INCREMENT的ID号;如果上一查询没有产生AUTO_INCREMENT的值,则返回0
      * @return int
      */
-    public function insertID() {
+    public function insertID()
+    {
         return mysqli_insert_id($this->_linkId);
     }
 
     /**
      * 开启事务
      */
-    public function start() {
+    public function start()
+    {
         if (!$this->_transStarted) {
             $this->_transStarted = true; // 这一行要放前面,否则会进入死循环
             $this->query('START TRANSACTION');
@@ -170,7 +185,8 @@ class MySQLiHelper {
     /**
      * 提交事务
      */
-    public function commit() {
+    public function commit()
+    {
         if ($this->_transStarted) {
             $this->query('COMMIT');
             $this->_transStarted = false;
@@ -180,7 +196,8 @@ class MySQLiHelper {
     /**
      * 事务回滚
      */
-    public function rollback() {
+    public function rollback()
+    {
         if ($this->_transStarted) {
             $this->query('ROLLBACK');
             $this->_transStarted = false;
@@ -192,7 +209,8 @@ class MySQLiHelper {
      * @param string $where
      * @param string $sql
      */
-    public function error($where, $sql = '') {
-        //throw new UserException(UserException::ERROR_MYSQLI, "Where:%s\nSQL:%s\nError:%s\nErrno:%d", $where, $sql, mysqli_error($this->_linkId), mysqli_errno($this->_linkId));
+    public function error($where, $sql = '')
+    {
+        throw new UserException(UserException::ERROR_MYSQLI, "Where:%s\nSQL:%s\nError:%s\nErrno:%d", $where, $sql, mysqli_error($this->_linkId), mysqli_errno($this->_linkId));
     }
 }

@@ -2,10 +2,20 @@
 /**
  * MemcachedHelper类
  * @link http://php.net/manual/en/book.memcached.php
- * @author mirrorgdit@gmail.com
- * @package sys.helper
+ * @author mirrorgdit@163.com
+ * @license  https://github.com/mirrorgdit/php-helper/blob/master/README.md
  */
-class MemcachedHelper {
+
+namespace mirrorgdit\helper;
+
+use mirrorgdit\helper\UserException;
+
+/**
+ * Class MemcachedHelper
+ * @package mirrorgdit\helper
+ */
+class MemcachedHelper
+{
     /**
      * 配置数组
      * @var array
@@ -41,7 +51,8 @@ class MemcachedHelper {
      * 构造函数
      * @param array $configArr 配置数组array($host, $port)
      */
-    public function __construct($configArr) {
+    public function __construct($configArr)
+    {
         $this->_configArr = array(
             'host' => $configArr[0],
             'port' => $configArr[1],
@@ -52,7 +63,8 @@ class MemcachedHelper {
      * 获取Memcached的实例
      * @return Memcached
      */
-    public function getConn() {
+    public function getConn()
+    {
         if (!isset($this->_m)) {
             // 检查扩展模块是否加载
             if (!extension_loaded('memcached')) {
@@ -77,7 +89,8 @@ class MemcachedHelper {
      * @param int $expiration The expiration time, defaults to 0.
      * @return bool Returns TRUE on success or FALSE on failure.
      */
-    public function add($key, $val, $expiration = 0) {
+    public function add($key, $val, $expiration = 0)
+    {
         $ret = $this->getConn()->add($key, $val, $expiration) or $this->checkResultCode();
         return $ret;
     }
@@ -88,7 +101,8 @@ class MemcachedHelper {
      * @param string $val The string to append.
      * @return bool Returns TRUE on success or FALSE on failure.
      */
-    public function append($key, $val) {
+    public function append($key, $val)
+    {
         $ret = $this->getConn()->append($key, $val) or $this->checkResultCode();
         return $ret;
     }
@@ -101,7 +115,8 @@ class MemcachedHelper {
      * @param int $expiration The expiration time, defaults to 0.
      * @return bool Returns TRUE on success or FALSE on failure.
      */
-    public function cas($casToken, $key, $val, $expiration = 0) {
+    public function cas($casToken, $key, $val, $expiration = 0)
+    {
         $ret = $this->getConn()->cas($casToken, $key, $val, $expiration) or $this->checkResultCode();
         return $ret;
     }
@@ -112,7 +127,8 @@ class MemcachedHelper {
      * @param int $offset The amount by which to decrement the item's value.
      * @return int/false Returns item's new value on success or FALSE on failure.
      */
-    public function decrement($key, $offset = 1) {
+    public function decrement($key, $offset = 1)
+    {
         $ret = $this->getConn()->decrement($key, $offset) or $this->checkResultCode();
         return $ret;
     }
@@ -123,7 +139,8 @@ class MemcachedHelper {
      * @param int $time The amount of time the server will wait to delete the item.
      * @return bool Returns TRUE on success or FALSE on failure.
      */
-    public function delete($key, $time = 0) {
+    public function delete($key, $time = 0)
+    {
         $ret = $this->getConn()->delete($key, $time) or $this->checkResultCode();
         return $ret;
     }
@@ -135,7 +152,8 @@ class MemcachedHelper {
      * @param &float $casToken The variable to store the CAS token in.
      * @return mixed Returns the value stored in the cache or FALSE otherwise.
      */
-    public function get($key, $cacheCallback = NULL, &$casToken = NULL) {
+    public function get($key, $cacheCallback = NULL, &$casToken = NULL)
+    {
         $numArgs = func_num_args();
         if ($numArgs === 2) {
             $ret = $this->getConn()->get($key, $cacheCallback) or $this->checkResultCode();
@@ -153,7 +171,8 @@ class MemcachedHelper {
      * @param int $flags The flags for the get operation.
      * @return bool Returns the array of found items or FALSE on failure.
      */
-    public function getMulti($keys, &$casTokens = NULL, $flags = \Memcached::GET_PRESERVE_ORDER) {
+    public function getMulti($keys, &$casTokens = NULL, $flags = \Memcached::GET_PRESERVE_ORDER)
+    {
         $ret = $this->getConn()->getMulti($keys, $casTokens, $flags) or $this->checkResultCode();
         return $ret;
     }
@@ -164,7 +183,8 @@ class MemcachedHelper {
      * @param int $offset The amount by which to increment the item's value.
      * @return int/false Returns new item's value on success or FALSE on failure.
      */
-    public function increment($key, $offset = 1) {
+    public function increment($key, $offset = 1)
+    {
         $ret = $this->getConn()->increment($key, $offset) or $this->checkResultCode();
         return $ret;
     }
@@ -175,7 +195,8 @@ class MemcachedHelper {
      * @param string $val The string to prepend.
      * @return bool Returns TRUE on success or FALSE on failure.
      */
-    public function prepend($key, $val) {
+    public function prepend($key, $val)
+    {
         $ret = $this->getConn()->prepend($key, $val) or $this->checkResultCode();
         return $ret;
     }
@@ -187,7 +208,8 @@ class MemcachedHelper {
      * @param int $expiration The expiration time, defaults to 0.
      * @return bool The expiration time, defaults to 0.
      */
-    public function replace($key, $val, $expiration = 0) {
+    public function replace($key, $val, $expiration = 0)
+    {
         $ret = $this->getConn()->replace($key, $val, $expiration) or $this->checkResultCode();
         return $ret;
     }
@@ -199,7 +221,8 @@ class MemcachedHelper {
      * @param int $expiration The expiration time, defaults to 0.
      * @return bool Returns TRUE on success or FALSE on failure.
      */
-    public function set($key, $val, $expiration = 0) {
+    public function set($key, $val, $expiration = 0)
+    {
         $ret = $this->getConn()->set($key, $val, $expiration) or $this->checkResultCode();
         return $ret;
     }
@@ -210,7 +233,8 @@ class MemcachedHelper {
      * @param int $expiration The expiration time, defaults to 0.
      * @return bool Returns TRUE on success or FALSE on failure.
      */
-    public function setMulti($items, $expiration = 0) {
+    public function setMulti($items, $expiration = 0)
+    {
         $ret = $this->getConn()->setMulti($items, $expiration) or $this->checkResultCode();
         return $ret;
     }
@@ -219,7 +243,8 @@ class MemcachedHelper {
      * 检查返回代码(严重错误直接抛出异常,普通错误返回TRUE交给用户自行处理)
      * @return true
      */
-    public function checkResultCode() {
+    public function checkResultCode()
+    {
         $resultCode = $this->getConn()->getResultCode();
         switch ($resultCode) {
             //case Memcached::RES_SUCCESS:

@@ -8,6 +8,8 @@
  */
 
 namespace mirrorgdit\helper;
+use mirrorgdit\helper\UserException;
+
 /**
  * Class RedisHelper
  * @package mirrorgdit\helper
@@ -71,7 +73,7 @@ class RedisHelper
             $this->_r = new \Redis();
             try {
                 $this->_r->connect($this->_configArr['host'], $this->_configArr['port'], $this->_timeout);
-            } catch (RedisException $e) {
+            } catch (\RedisException $e) {
                 throw new UserException(UserException::ERROR_REDIS, 'Cannot connect to redis server(%s)!', $e->getMessage());
             }
         }
